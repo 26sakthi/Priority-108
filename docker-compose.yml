@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgis/postgis:16-3.4
+    container_name: prioritycare-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: prioritycare
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d prioritycare"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: prioritycare-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:postgrespassword@postgres-db:5432/prioritycare
+      API_V1_STR: /api/v1
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+  frontend-ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: prioritycare-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend-api
+
+volumes:
+  postgres_data:

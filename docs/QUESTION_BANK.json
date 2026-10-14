@@ -1,0 +1,153 @@
+{
+  "version": "1.0.0",
+  "name": "PriorityCare Dynamic Emergency Question Bank",
+  "essential_questions": [
+    {
+      "question_id": "Q_EVENT_TYPE",
+      "category": "ESSENTIAL",
+      "text": "What type of emergency occurred?",
+      "question_type": "SINGLE_CHOICE",
+      "is_essential": true,
+      "options": [
+        {"value": "ROAD_TRAFFIC_ACCIDENT", "label": "Vehicle Accident / Collision", "urgency_weight": 30},
+        {"value": "CARDIAC_CHEST_PAIN", "label": "Chest Pain / Heart Attack", "urgency_weight": 40},
+        {"value": "UNCONSCIOUS_FALL", "label": "Unconscious / Severe Fall", "urgency_weight": 35},
+        {"value": "RESPIRATORY", "label": "Severe Breathing Difficulty / Choking", "urgency_weight": 40},
+        {"value": "STROKE_NEURO", "label": "Sudden Weakness / Slurred Speech / Stroke", "urgency_weight": 35},
+        {"value": "OTHER", "label": "Other Medical Emergency", "urgency_weight": 15}
+      ]
+    },
+    {
+      "question_id": "Q_CONSCIOUSNESS",
+      "category": "ESSENTIAL",
+      "text": "Is the patient conscious?",
+      "question_type": "SINGLE_CHOICE",
+      "is_essential": true,
+      "options": [
+        {"value": "ALERT", "label": "Alert and talking normally", "urgency_weight": 0},
+        {"value": "DROWSY", "label": "Drowsy / Responds only to loud voice or pain", "urgency_weight": 25},
+        {"value": "UNRESPONSIVE", "label": "Completely unresponsive / unconscious", "urgency_weight": 40}
+      ]
+    },
+    {
+      "question_id": "Q_BREATHING",
+      "category": "ESSENTIAL",
+      "text": "Is the patient breathing normally?",
+      "question_type": "SINGLE_CHOICE",
+      "is_essential": true,
+      "options": [
+        {"value": "NORMAL", "label": "Normal, regular breathing", "urgency_weight": 0},
+        {"value": "DIFFICULT", "label": "Struggling to breathe / Agonal / Wheezing", "urgency_weight": 35},
+        {"value": "ABSENT", "label": "NOT breathing / Gasping for air", "urgency_weight": 100, "trigger_instant_p1": true}
+      ]
+    },
+    {
+      "question_id": "Q_BLEEDING",
+      "category": "ESSENTIAL",
+      "text": "Is there severe, uncontrolled bleeding?",
+      "question_type": "SINGLE_CHOICE",
+      "is_essential": true,
+      "options": [
+        {"value": "NONE", "label": "No major bleeding", "urgency_weight": 0},
+        {"value": "MODERATE", "label": "Controlled oozing or minor cut", "urgency_weight": 15},
+        {"value": "SEVERE_PUMPING", "label": "Severe pumping / gushing blood (Arterial)", "urgency_weight": 45, "trigger_instant_p1": true}
+      ]
+    },
+    {
+      "question_id": "Q_LOCATION_CONFIRM",
+      "category": "ESSENTIAL",
+      "text": "Confirm exact accident spot / nearby milestone or landmark:",
+      "question_type": "TEXT",
+      "is_essential": true,
+      "options": []
+    }
+  ],
+  "adaptive_modules": {
+    "ROAD_TRAFFIC_ACCIDENT": [
+      {
+        "question_id": "Q_RTA_CASUALTIES",
+        "category": "ADAPTIVE",
+        "text": "How many total people are injured?",
+        "question_type": "NUMERIC",
+        "is_essential": false,
+        "options": []
+      },
+      {
+        "question_id": "Q_RTA_TRAPPED",
+        "category": "ADAPTIVE",
+        "text": "Are any victims trapped inside vehicles or under debris?",
+        "question_type": "SINGLE_CHOICE",
+        "is_essential": false,
+        "options": [
+          {"value": "YES", "label": "Yes, trapped (Extrication needed)", "urgency_weight": 25},
+          {"value": "NO", "label": "No, free / ejected", "urgency_weight": 5}
+        ]
+      },
+      {
+        "question_id": "Q_RTA_HAZARDS",
+        "category": "ADAPTIVE",
+        "text": "Are there hazardous scene conditions present?",
+        "question_type": "MULTIPLE_CHOICE",
+        "is_essential": false,
+        "options": [
+          {"value": "FUEL_LEAK", "label": "Fuel leaking on roadway", "urgency_weight": 10},
+          {"value": "VEHICLE_FIRE", "label": "Active fire / smoke", "urgency_weight": 20},
+          {"value": "HIGH_VOLTAGE", "label": "Fallen power cable / electrical wires", "urgency_weight": 20},
+          {"value": "NONE", "label": "None visible", "urgency_weight": 0}
+        ]
+      }
+    ],
+    "CARDIAC_CHEST_PAIN": [
+      {
+        "question_id": "Q_CARDIAC_RADIATION",
+        "category": "ADAPTIVE",
+        "text": "Does the pain radiate to the left arm, neck, or jaw?",
+        "question_type": "SINGLE_CHOICE",
+        "is_essential": false,
+        "options": [
+          {"value": "YES", "label": "Yes, radiating pain with cold sweat", "urgency_weight": 25},
+          {"value": "NO", "label": "No, localized chest discomfort", "urgency_weight": 10}
+        ]
+      },
+      {
+        "question_id": "Q_CARDIAC_ONSET",
+        "category": "ADAPTIVE",
+        "text": "When did symptoms begin?",
+        "question_type": "SINGLE_CHOICE",
+        "is_essential": false,
+        "options": [
+          {"value": "LESS_30_MIN", "label": "Less than 30 minutes ago", "urgency_weight": 20},
+          {"value": "30_TO_120_MIN", "label": "30 minutes to 2 hours ago", "urgency_weight": 15},
+          {"value": "GREATER_2_HOURS", "label": "More than 2 hours ago", "urgency_weight": 10}
+        ]
+      }
+    ],
+    "STROKE_NEURO": [
+      {
+        "question_id": "Q_FAST_SIGNS",
+        "category": "ADAPTIVE",
+        "text": "Are FAST stroke symptoms observed (Facial droop, Arm weakness, Speech slurring)?",
+        "question_type": "MULTIPLE_CHOICE",
+        "is_essential": false,
+        "options": [
+          {"value": "FACE_DROOP", "label": "Facial droop / one side drooping", "urgency_weight": 20},
+          {"value": "ARM_WEAKNESS", "label": "Arm drift / unable to raise both arms", "urgency_weight": 20},
+          {"value": "SPEECH_SLURRED", "label": "Slurred speech / unable to speak clearly", "urgency_weight": 20}
+        ]
+      }
+    ],
+    "RESPIRATORY": [
+      {
+        "question_id": "Q_RESP_CYANOSIS",
+        "category": "ADAPTIVE",
+        "text": "Are the patient's lips or fingers turning blue/pale?",
+        "question_type": "SINGLE_CHOICE",
+        "is_essential": false,
+        "options": [
+          {"value": "YES", "label": "Yes, blue / grey / pale lips (Severe hypoxia)", "urgency_weight": 35},
+          {"value": "NO", "label": "No cyanosis observed", "urgency_weight": 10}
+        ]
+      }
+    ]
+  }
+}
